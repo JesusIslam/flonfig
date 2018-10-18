@@ -19,7 +19,7 @@ type Flag struct {
 
 // Flags is only used to parse the toml
 type Flags struct {
-	flags []*Flag `toml:"flags"`
+	Flags []*Flag `toml:"flags"`
 }
 
 // Flonfig is the core of this package
@@ -44,39 +44,41 @@ func (f *Flonfig) Implement(configpath string) (err error) {
 	}
 
 	f.Flags = map[string]*Flag{}
-	for _, fl := range flags.flags {
+
+	// Define the flags first
+	for _, fl := range flags.Flags {
 		switch fl.ValueType {
 		case "string":
 			targetPointer := flag.String(fl.Key, fl.DefaultValue.(string), fl.Message)
-			fl.ParsedValue = *targetPointer
+			fl.ParsedValue = targetPointer
 			break
 		case "int":
-			targetPointer := flag.Int(fl.Key, fl.DefaultValue.(int), fl.Message)
-			fl.ParsedValue = *targetPointer
+			targetPointer := flag.Int(fl.Key, int(fl.DefaultValue.(int64)), fl.Message)
+			fl.ParsedValue = targetPointer
 			break
 		case "int64":
 			targetPointer := flag.Int64(fl.Key, fl.DefaultValue.(int64), fl.Message)
-			fl.ParsedValue = *targetPointer
+			fl.ParsedValue = targetPointer
 			break
 		case "uint":
-			targetPointer := flag.Uint(fl.Key, fl.DefaultValue.(uint), fl.Message)
-			fl.ParsedValue = *targetPointer
+			targetPointer := flag.Uint(fl.Key, uint(fl.DefaultValue.(int64)), fl.Message)
+			fl.ParsedValue = targetPointer
 			break
 		case "uint64":
-			targetPointer := flag.Uint64(fl.Key, fl.DefaultValue.(uint64), fl.Message)
-			fl.ParsedValue = *targetPointer
+			targetPointer := flag.Uint64(fl.Key, uint64(fl.DefaultValue.(int64)), fl.Message)
+			fl.ParsedValue = targetPointer
 			break
 		case "bool":
 			targetPointer := flag.Bool(fl.Key, fl.DefaultValue.(bool), fl.Message)
-			fl.ParsedValue = *targetPointer
+			fl.ParsedValue = targetPointer
 			break
 		case "float64":
 			targetPointer := flag.Float64(fl.Key, fl.DefaultValue.(float64), fl.Message)
-			fl.ParsedValue = *targetPointer
+			fl.ParsedValue = targetPointer
 			break
 		case "duration":
-			targetPointer := flag.Duration(fl.Key, fl.DefaultValue.(time.Duration), fl.Message)
-			fl.ParsedValue = *targetPointer
+			targetPointer := flag.Duration(fl.Key, time.Duration(fl.DefaultValue.(int64)), fl.Message)
+			fl.ParsedValue = targetPointer
 			break
 		default:
 			err = fmt.Errorf("Invalid value type %s for flag %s", fl.ValueType, fl.Key)
@@ -84,6 +86,50 @@ func (f *Flonfig) Implement(configpath string) (err error) {
 		}
 
 		f.Flags[fl.Key] = fl
+	}
+
+	// Parse the flags
+	flag.Parse()
+
+	// collect the flag values
+	for key, fl := range f.Flags {
+		switch fl.ValueType {
+		case "string":
+			targetPointer := fl.ParsedValue.(*string)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "int":
+			targetPointer := fl.ParsedValue.(*int)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "int64":
+			targetPointer := fl.ParsedValue.(*int64)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "uint":
+			targetPointer := fl.ParsedValue.(*uint)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "uint64":
+			targetPointer := fl.ParsedValue.(*uint64)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "bool":
+			targetPointer := fl.ParsedValue.(*bool)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "float64":
+			targetPointer := fl.ParsedValue.(*float64)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "duration":
+			targetPointer := fl.ParsedValue.(*time.Duration)
+			f.Flags[key].ParsedValue = *targetPointer
+			break
+		default:
+			err = fmt.Errorf("Invalid value type %s for flag %s", fl.ValueType, fl.Key)
+			return
+		}
 	}
 
 	return
