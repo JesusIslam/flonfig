@@ -15,6 +15,9 @@ Just like what the subtitle says, it is created so you (well, me actually) could
 Because I want a flexible config flag and I don't want to define the flags hardcoded. Essentially, because I am a lazy bum.
 
 ## How
-Just open the example directory.
+Just open the examples directory.
 
 ## TODO
+
+## Notes
+Also, I would gladly accept PR.
