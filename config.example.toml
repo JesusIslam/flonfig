@@ -1,0 +1,43 @@
+# Please don't change this as it is used for test
+
+[[flags]]
+key = "s"
+message = "Will be used to accept string argument"
+value_type = "string"
+default_value = ""
+
+[[flags]]
+key = "i"
+message = "Will be used to accept int argument"
+value_type = "int"
+default_value = 0
+
+[[flags]]
+key = "u"
+message = "Will be used to accept uint argument"
+value_type = "uint"
+default_value = 0
+
+[[flags]]
+key = "u64"
+message = "Will be used to accept uint64 argument"
+value_type = "uint64"
+default_value = 0
+
+[[flags]]
+key = "b"
+message = "Will be used to accept boolean argument"
+value_type = "bool"
+default_value = false
+
+[[flags]]
+key = "f"
+message = "Will be used to accept float64 argument"
+value_type = "float64"
+default_value = 0.0
+
+[[flags]]
+key = "d"
+message = "Will be used to accept duration argument"
+value_type = "duration"
+default_value = 0
