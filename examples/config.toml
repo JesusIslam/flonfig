@@ -1,0 +1,5 @@
+[[flags]]
+key = "print"
+message = "Text to print"
+value_type = "string"
+default_value = "Hello, world!"
