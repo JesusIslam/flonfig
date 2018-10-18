@@ -3,6 +3,8 @@ package flonfig
 import (
 	"flag"
 	"fmt"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -11,6 +13,7 @@ import (
 // Flag is used to unmarshal the JSON
 type Flag struct {
 	Key          string      `toml:"key"`
+	Env          string      `toml:"env,omitempty"`
 	Message      string      `toml:"message"`
 	ValueType    string      `toml:"value_type"`
 	DefaultValue interface{} `toml:"default_value"`
@@ -80,6 +83,10 @@ func (f *Flonfig) Implement(configpath string) (err error) {
 			targetPointer := flag.Duration(fl.Key, time.Duration(fl.DefaultValue.(int64)), fl.Message)
 			fl.ParsedValue = targetPointer
 			break
+		case "duration_string":
+			targetPointer := flag.String(fl.Key, fl.DefaultValue.(string), fl.Message)
+			fl.ParsedValue = targetPointer
+			break
 		default:
 			err = fmt.Errorf("Invalid value type %s for flag %s", fl.ValueType, fl.Key)
 			return
@@ -96,35 +103,154 @@ func (f *Flonfig) Implement(configpath string) (err error) {
 		switch fl.ValueType {
 		case "string":
 			targetPointer := fl.ParsedValue.(*string)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					targetPointer = &envValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "int":
 			targetPointer := fl.ParsedValue.(*int)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue int
+					tmpValue, err = strconv.Atoi(envValue)
+					if err != nil {
+						return
+					}
+					targetPointer = &tmpValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "int64":
 			targetPointer := fl.ParsedValue.(*int64)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue int64
+					tmpValue, err = strconv.ParseInt(envValue, 10, 64)
+					if err != nil {
+						return
+					}
+					targetPointer = &tmpValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "uint":
 			targetPointer := fl.ParsedValue.(*uint)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue uint64
+					tmpValue, err = strconv.ParseUint(envValue, 10, 64)
+					if err != nil {
+						return
+					}
+					tmpUintValue := uint(tmpValue)
+					targetPointer = &tmpUintValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "uint64":
 			targetPointer := fl.ParsedValue.(*uint64)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue uint64
+					tmpValue, err = strconv.ParseUint(envValue, 10, 64)
+					if err != nil {
+						return
+					}
+					targetPointer = &tmpValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "bool":
 			targetPointer := fl.ParsedValue.(*bool)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue bool
+					tmpValue, err = strconv.ParseBool(envValue)
+					if err != nil {
+						return
+					}
+					targetPointer = &tmpValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "float64":
 			targetPointer := fl.ParsedValue.(*float64)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue float64
+					tmpValue, err = strconv.ParseFloat(envValue, 64)
+					if err != nil {
+						return
+					}
+					targetPointer = &tmpValue
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
 			break
 		case "duration":
 			targetPointer := fl.ParsedValue.(*time.Duration)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					var tmpValue int64
+					tmpValue, err = strconv.ParseInt(envValue, 10, 64)
+					if err != nil {
+						return
+					}
+					tmpValueDuration := time.Duration(tmpValue)
+					targetPointer = &tmpValueDuration
+				}
+			}
+
 			f.Flags[key].ParsedValue = *targetPointer
+			break
+		case "duration_string":
+			targetPointer := fl.ParsedValue.(*string)
+
+			if fl.Env != "" {
+				envValue, exist := os.LookupEnv(fl.Env)
+				if exist {
+					targetPointer = &envValue
+				}
+			}
+
+			var targetDuration time.Duration
+			targetDuration, err = time.ParseDuration(*targetPointer)
+			if err != nil {
+				return
+			}
+
+			f.Flags[key].ParsedValue = targetDuration
 			break
 		default:
 			err = fmt.Errorf("Invalid value type %s for flag %s", fl.ValueType, fl.Key)

@@ -53,9 +53,13 @@ func TestImplement(t *testing.T) {
 			break
 		case "d":
 			val, ok := item.ParsedValue.(time.Duration)
-			assert.True(t, ok, "-d flag must return string")
+			assert.True(t, ok, "-d flag must return time.Duration")
 			assert.Equal(t, time.Duration(0), val, "the value of -d flag must be the same as the default value of time.Duration")
 			break
+		case "ds":
+			val, ok := item.ParsedValue.(time.Duration)
+			assert.True(t, ok, "-ds flag must return time.Duration")
+			assert.Equal(t, time.Duration(0), val, "the value of -ds flag must be the same as the default value of time.Duration")
 		default:
 			assert.Failf(t, "Invalid flag key %s", flagKey)
 		}
