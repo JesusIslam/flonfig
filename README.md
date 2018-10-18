@@ -4,7 +4,7 @@ Turn your config into flags easily.
 [![Build Status](https://travis-ci.org/JesusIslam/flonfig.svg?branch=master)](https://travis-ci.org/JesusIslam/flonfig)
 [![Coverage Status](https://coveralls.io/repos/github/JesusIslam/flonfig/badge.svg?branch=master)](https://coveralls.io/github/JesusIslam/flonfig?branch=master)
 [![GoDoc](https://godoc.org/github.com/JesusIslam/flonfig?status.svg)](https://godoc.org/github.com/JesusIslam/flonfig)
-[![GoReport](https://goreportcard.com/badge/github.com/JesusIslam/flonfig)
+[![Go Report Card](https://goreportcard.com/badge/github.com/JesusIslam/flonfig)](https://goreportcard.com/report/github.com/JesusIslam/flonfig)
 
 ## Dependencies
 - `go get github.com/BurntSushi/toml`
