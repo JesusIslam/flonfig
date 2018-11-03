@@ -1,5 +1,6 @@
 [[flags]]
 key = "print"
+env = "PRINT"
 message = "Text to print"
 value_type = "string"
 default_value = "Hello, world!"

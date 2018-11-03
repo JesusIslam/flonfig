@@ -1,0 +1,56 @@
+[[flags]]
+key = "str"
+env = "FLONFIG_STRING"
+message = "Will be used to accept string argument"
+value_type = "string"
+default_value = ""
+
+[[flags]]
+key = "int"
+env = "FLONFIG_INT"
+message = "Will be used to accept int argument"
+value_type = "int"
+default_value = 0
+
+[[flags]]
+key = "uint"
+env = "FLONFIG_UINT"
+message = "Will be used to accept uint argument"
+value_type = "uint"
+default_value = 0
+
+[[flags]]
+key = "uint64"
+env = "FLONFIG_UINT64"
+message = "Will be used to accept uint64 argument"
+value_type = "uint64"
+default_value = 0
+
+[[flags]]
+key = "bool"
+env = "FLONFIG_BOOLEAN"
+message = "Will be used to accept boolean argument"
+value_type = "bool"
+default_value = false
+
+[[flags]]
+key = "float64"
+env = "FLONFIG_FLOAT64"
+message = "Will be used to accept float64 argument"
+value_type = "float64"
+default_value = 0.0
+
+[[flags]]
+key = "duration"
+env = "FLONFIG_DURATION"
+message = "Will be used to accept duration argument"
+value_type = "duration"
+default_value = 0
+
+
+[[flags]]
+key = "duration-string"
+env = "FLONFIG_DURATION_STRING"
+message = "Will be used to accept duration_string argument"
+value_type = "duration_string"
+default_value = "0s"

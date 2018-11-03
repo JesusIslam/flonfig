@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -36,14 +37,23 @@ func New() *Flonfig {
 	return &Flonfig{}
 }
 
-// Implement will load the config file and implement it as flags
-func (f *Flonfig) Implement(configpath string) (err error) {
-	f.ConfigPath = configpath
+// Implement will load the config file if the target file exists
+// or read it as config string if the target file does not exist
+// and implement it as flags
+func (f *Flonfig) Implement(configpathOrData string) (err error) {
+	f.ConfigPath = configpathOrData
 	flags := Flags{}
 
-	_, err = toml.DecodeFile(configpath, &flags)
-	if err != nil {
-		return
+	if isConfig(configpathOrData) {
+		_, err = toml.Decode(configpathOrData, &flags)
+		if err != nil {
+			return
+		}
+	} else {
+		_, err = toml.DecodeFile(configpathOrData, &flags)
+		if err != nil {
+			return
+		}
 	}
 
 	f.Flags = map[string]*Flag{}
@@ -256,6 +266,41 @@ func (f *Flonfig) Implement(configpath string) (err error) {
 			err = fmt.Errorf("Invalid value type %s for flag %s", fl.ValueType, fl.Key)
 			return
 		}
+	}
+
+	return
+}
+
+// Windows max 260 characters path
+// macOS max characters path 1016 characters
+// Linux max 4096 characters path and 255 characters for file name
+func isConfig(data string) (itIs bool) {
+	switch runtime.GOOS {
+	case "windows":
+		if len(data) >= 255 {
+			itIs = true
+		}
+	case "linux":
+		if len(data) >= 4096 {
+			itIs = true
+		}
+	case "darwin":
+		if len(data) >= 1016 {
+			itIs = true
+		}
+	case "dragonfly":
+		if len(data) >= 1016 {
+			itIs = true
+		}
+	case "netbsd":
+		if len(data) >= 1016 {
+			itIs = true
+		}
+	case "openbsd":
+		if len(data) >= 1016 {
+			itIs = true
+		}
+	default:
 	}
 
 	return
