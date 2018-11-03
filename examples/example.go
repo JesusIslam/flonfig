@@ -8,7 +8,7 @@ import (
 
 func main() {
 	f := flonfig.New()
-	err := f.Implement("./config.toml")
+	err := f.ImplementFile("./config.toml")
 	if err != nil {
 		panic(err)
 	}

@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"runtime"
 	"strconv"
 	"time"
 
@@ -37,25 +36,7 @@ func New() *Flonfig {
 	return &Flonfig{}
 }
 
-// Implement will load the config file if the target file exists
-// or read it as config string if the target file does not exist
-// and implement it as flags
-func (f *Flonfig) Implement(configpathOrData string) (err error) {
-	f.ConfigPath = configpathOrData
-	flags := Flags{}
-
-	if isConfig(configpathOrData) {
-		_, err = toml.Decode(configpathOrData, &flags)
-		if err != nil {
-			return
-		}
-	} else {
-		_, err = toml.DecodeFile(configpathOrData, &flags)
-		if err != nil {
-			return
-		}
-	}
-
+func (f *Flonfig) Parse(flags Flags) (err error) {
 	f.Flags = map[string]*Flag{}
 
 	// Define the flags first
@@ -271,36 +252,38 @@ func (f *Flonfig) Implement(configpathOrData string) (err error) {
 	return
 }
 
-// Windows max 260 characters path
-// macOS max characters path 1016 characters
-// Linux max 4096 characters path and 255 characters for file name
-func isConfig(data string) (itIs bool) {
-	switch runtime.GOOS {
-	case "windows":
-		if len(data) >= 255 {
-			itIs = true
-		}
-	case "linux":
-		if len(data) >= 255 {
-			itIs = true
-		}
-	case "darwin":
-		if len(data) >= 1016 {
-			itIs = true
-		}
-	case "dragonfly":
-		if len(data) >= 1016 {
-			itIs = true
-		}
-	case "netbsd":
-		if len(data) >= 1016 {
-			itIs = true
-		}
-	case "openbsd":
-		if len(data) >= 1016 {
-			itIs = true
-		}
-	default:
+func (f *Flonfig) ImplementData(data string) (err error) {
+	f.ConfigPath = data
+	flags := Flags{}
+
+	_, err = toml.Decode(data, &flags)
+	if err != nil {
+		return
+	}
+
+	err = f.Parse(flags)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// Implement will load the config file if the target file exists
+// or read it as config string if the target file does not exist
+// and implement it as flags
+func (f *Flonfig) ImplementFile(configpathOrData string) (err error) {
+	f.ConfigPath = configpathOrData
+	flags := Flags{}
+
+	_, err = toml.DecodeFile(configpathOrData, &flags)
+	if err != nil {
+		return
+	}
+
+	err = f.Parse(flags)
+	if err != nil {
+		return
 	}
 
 	return

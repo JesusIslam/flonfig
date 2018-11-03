@@ -120,7 +120,7 @@ func TestImplementData(t *testing.T) {
 		assert.FailNow(t, "Test failed without config file")
 	}
 
-	err = testFlonfig.Implement(string(raw))
+	err = testFlonfig.ImplementData(string(raw))
 	assert.NoError(t, err, "Implement must not return an error")
 
 	assertFlonfigFlagsData(t, testFlonfig)
@@ -131,7 +131,7 @@ func TestImplementFile(t *testing.T) {
 	configPath := "./config.example.toml"
 	assert.FileExists(t, configPath, "Config file must be exist")
 
-	err := testFlonfig.Implement(configPath)
+	err := testFlonfig.ImplementFile(configPath)
 	assert.NoError(t, err, "Implement must not return an error")
 
 	assertFlonfigFlagsFile(t, testFlonfig)
