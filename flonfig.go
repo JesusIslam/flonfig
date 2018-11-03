@@ -281,7 +281,7 @@ func isConfig(data string) (itIs bool) {
 			itIs = true
 		}
 	case "linux":
-		if len(data) >= 4096 {
+		if len(data) >= 255 {
 			itIs = true
 		}
 	case "darwin":
